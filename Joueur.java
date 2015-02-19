@@ -32,8 +32,6 @@ public abstract class Joueur
 		this.jVer = ord;
 	}
 	
-	public abstract int[] BloquerUneCase(int abs, int ord);
-	
 	public abstract String toString();
 	
 	

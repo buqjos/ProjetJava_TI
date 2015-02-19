@@ -25,7 +25,26 @@ public class Plateau
 			{
 				terrain[i][j] = 0;
 			}
-		}	
+		}
+		
+//		// gestion du bonus
+//		int bonus = (int)(hor*ver/10);
+//		
+//		for(int i=0; i<bonus; i++)
+//		{
+//			int aleaHor = (int)(Math.random()*this.abs);
+//			int aleaVer = (int)(Math.random()*this.ord);
+//			
+//			// pas de gestion de conflits puisque le terrain est vide
+//			// un bonus peut être remplacé par un bonus
+//			terrain[aleaHor][aleaVer] = 3;
+//		}
+	}
+	
+	// surdefinition du constructeur
+	public Plateau(int[] pVal)
+	{
+		this(pVal[0],pVal[1]);
 	}
 	
 	// constructeur par défaut de la classe
@@ -45,10 +64,16 @@ public class Plateau
 	 * 2 : case joueur présent
 	 * 3 : case bonus
 	 */
-	public void setEtat(int hor, int ver, int etat)
+	public boolean setEtat(int hor, int ver, int etat)
 	{
-		// prevoir verif
-		terrain[hor][ver] = etat;
+		if(etat>=0 || etat<=3)
+		{
+			terrain[hor][ver] = etat;
+			
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public void setEtat(int[] joueur)
@@ -73,6 +98,19 @@ public class Plateau
 		}
 		
 		return message;
+	}
+	
+	// methode permettant de griser une case du plateau
+	public int griserCase(int abs, int ord)
+	{
+		if (this.terrain[abs][ord]==0||this.terrain[abs][ord]==3)
+		{
+			this.terrain[abs][ord] = 1;
+			
+			// si ok
+			return 0;
+		}
+		else return this.terrain[abs][ord];
 	}
 
 }

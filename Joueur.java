@@ -7,7 +7,7 @@
  */
 public abstract class Joueur
 {
-	private int jHor, jVer, jEtat;
+	protected int jHor, jVer, jEtat;
 	
 	public Joueur(int abs, int ord)
 	{
@@ -32,8 +32,7 @@ public abstract class Joueur
 		this.jVer = ord;
 	}
 	
+	public abstract void deplacer(int M);
+	
 	public abstract String toString();
-	
-	
-
 }

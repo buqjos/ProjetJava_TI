@@ -76,29 +76,32 @@ public class Plateau
 		return false;
 	}
 	
-	public void setEtat(int[] joueur)
+	public boolean setEtat(int[] joueur)
 	{
-		this.setEtat(joueur[0], joueur[1], joueur[2]);
+		return this.setEtat(joueur[0], joueur[1], joueur[2]);
 	}
 	
-	// methode indiquant les cases occupées du plateau
-	public String toString()
-	{
-		String message = "Je suis occupé en position :\n";
-		
-		for(int i = 0; i < this.abs; i++)
+	// methode indiquant les cases du plateau
+		public String toString()
 		{
-			for (int j = 0; j < this.ord; j++)
+			String message = "Affichage du plateau tête d'abricot !\n";
+			
+			for(int i = 0; i < this.abs; i++)
 			{
-				if(terrain[i][j]!=0)
+				for (int j = 0; j < this.ord; j++)
 				{
-					message += i+","+j+"\n";
+					message += terrain[i][j] + " ";
+//					// pour n'afficher que les cases occupees
+//					if(terrain[i][j]!=0)
+//					{
+//						message += i+","+j+"\n";
+//					}
 				}
+				message += "\n";
 			}
+			
+			return message;
 		}
-		
-		return message;
-	}
 	
 	// methode permettant de griser une case du plateau
 	public int griserCase(int abs, int ord)

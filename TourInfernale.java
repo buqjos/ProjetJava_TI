@@ -10,17 +10,17 @@ import java.util.LinkedList;
  */
 public class TourInfernale 
 {
-	// nombre de tours
+	// declaration des variables
 	private int nbTours;
 	private int nbJoueurs;
 	private Plateau p;
 	private LinkedList<Joueur> listeJ;
 	
-	TourInfernale(int nbJoueurs, int pLargeur, int pHauteur)
+	TourInfernale(int nbJoueurs)//, int pLargeur, int pHauteur)
 	{
 		this.nbTours=0;
 		this.nbJoueurs=nbJoueurs;
-		this.p = new Plateau(pLargeur, pHauteur);
+//		this.p = new Plateau(pLargeur, pHauteur);
 		for (int i=0; i<this.nbJoueurs; i++)
 		{
 			this.listeJ.add(new Humain(i,i));
@@ -73,43 +73,41 @@ public class TourInfernale
 	
 	public static void main(String[] args)
 	{
-		int [] tab = new int[2];
+		// creation du plateau de jeu
+		Plateau plateau = new Plateau(creationPlateau());
 		
-		boolean tabVal = true;
-		do
-		{
-			try
-			{
-				Scanner sc = new Scanner(System.in);
-				int nb;
-				nb = sc.nextInt();
-				tab[nb] = 4;
-				sc.close();
-			}
-			catch (ArrayIndexOutOfBoundsException e)
-			{
-				System.out.println("Reste dans le tableau connard !");
-				tabVal = false;
-			}
-		}
-		while (tabVal==false);
-		
-//		// creation du plateau de jeu
-//		Plateau plateau = new Plateau(creationPlateau());
-//		
-//		Joueur j1;
-//		j1 = creerJoueur(plateau, 3, 2);
-//		//plateau.setEtat(j1.getJoueur());
-//		Joueur j2 = new Humain(4,5);
-//		plateau.setEtat(j2.getJoueur());
-//		
-//		plateau.griserCase(6, 6);
-//		
-//		System.out.print(plateau.toString());
-		 
-		
+		Joueur j1;
+		j1 = creerJoueur(plateau, 3, 2);
+		plateau.setEtat(j1.getJoueur());
+		Joueur j2 = new Humain(4,5);
+		plateau.setEtat(j2.getJoueur());
+		if(plateau.griserCase(6, 6)==0)
+			System.out.println("Case grisée !");
+		else
+			System.out.println("Case NON grisée.");		
+		System.out.print(plateau.toString());
+//		Scanner scanner = new Scanner(System.in);
+//		int deplacement;
+//		deplacement = scanner.nextInt();
+		j1.deplacer(6);
+//		scanner.close();
+		plateau.setEtat(j1.getJoueur());
+		System.out.print(plateau.toString());
+
 //		// test de jeu
 //		TourInfernale jeu = new TourInfernale(2, 5, 5);
-
 	}
 }
+
+//// bout de code try catch-scanner
+//try
+//{
+//	Scanner sc = new Scanner(System.in);
+//	int nb;
+//	nb = sc.nextInt();
+//	sc.close();
+//}
+//catch (ArrayIndexOutOfBoundsException e)
+//{
+//	System.out.println("Reste dans le tableau connard !");
+//}

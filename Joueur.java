@@ -8,6 +8,8 @@
 public abstract class Joueur
 {
 	protected int jHor, jVer, jEtat;
+	protected String jName;
+	protected char jLettre;
 	
 	public Joueur(int abs, int ord)
 	{
@@ -15,6 +17,13 @@ public abstract class Joueur
 		this.jVer = ord;
 		// voir commentaire de la methode setEtat de Plateau pour plus de details
 		this.jEtat = 2;
+	}
+	
+	public Joueur(int abs, int ord, String nom)
+	{
+		this(abs, ord);
+		this.jName = nom;
+		this.jLettre = jName.charAt(0);
 	}
 	
 	public int[] getJoueur()
@@ -32,7 +41,7 @@ public abstract class Joueur
 		this.jVer = ord;
 	}
 	
-	public abstract void deplacer(int M);
+	public abstract String getNom();
 	
 	public abstract String toString();
 }

@@ -84,28 +84,53 @@ public class Plateau
 	// methode indiquant les cases du plateau
 		public String toString()
 		{
-			String message = "Affichage du plateau tête d'abricot !\n";
-			
+			String message = "";
+			System.out.println("Le plateau est occupé :");
+			System.out.print("    -par une case grisée en : "); 
 			for(int i = 0; i < this.abs; i++)
 			{
 				for (int j = 0; j < this.ord; j++)
 				{
-					message += terrain[i][j] + " ";
-//					// pour n'afficher que les cases occupees
-//					if(terrain[i][j]!=0)
-//					{
-//						message += i+","+j+"\n";
-//					}
+					if(terrain[i][j] == 1)
+					{
+						System.out.print("(" + i+","+j+ ") ");
+					}
 				}
-				message += "\n";
 			}
-			
+			System.out.println("");
+			System.out.print("    -par un joueur en :"); 
+			for(int i = 0; i < this.abs; i++)
+			{
+				for (int j = 0; j < this.ord; j++)
+				{
+					if(terrain[i][j] == 2)
+					{ 
+						System.out.print("(" + i+","+j+ ") ");
+					}			
+				}
+			}
+			System.out.println("");
+			System.out.print("    -par une case bonus en :"); 
+			for(int i = 0; i < this.abs; i++)
+			{
+				for (int j = 0; j < this.ord; j++)
+				{
+					if(terrain[i][j] == 3)
+					{ 
+						System.out.print("(" + i+","+j+ ") ");
+					}
+				}
+			}
+			System.out.println("");
 			return message;
 		}
 	
 	// methode permettant de griser une case du plateau
 	public int griserCase(int abs, int ord)
 	{
+		if(abs > this.abs || ord > this.ord){
+			System.out.println("Veuillez griser une case comprise dans un plateau de taille["+this.abs+","+this.ord+"].");
+		}
 		if (this.terrain[abs][ord]==0||this.terrain[abs][ord]==3)
 		{
 			this.terrain[abs][ord] = 1;

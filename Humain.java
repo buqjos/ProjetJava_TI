@@ -5,6 +5,16 @@ public class Humain extends Joueur
 	{
 		super(abs, ord);
 	}
+	
+	public Humain(int abs, int ord, String nom)
+	{
+		super(abs, ord, nom);
+	}
+	
+	public String getNom()
+	{
+		return this.jName;
+	}
 
 	public String toString()
 	{		
@@ -48,7 +58,7 @@ public class Humain extends Joueur
 				break;
 		}
 		
-		if(this.jVer < 10 && this.jHor < 10){
+		if(this.jVer > 0 && this.jHor > 0 && this.jVer < 10 && this.jHor < 10){
 			System.out.println("J'étais en postion : (" + ancienneAbs + "," + ancienneOrd + ") et je suis désormais en : (" + this.jHor + "," + this.jVer + ").");
 		}
 		else{

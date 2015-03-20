@@ -1,6 +1,7 @@
-import java.util.InputMismatchException;
+//import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.LinkedList;
+//import java.io.*;
 
 /**
  * 
@@ -10,22 +11,50 @@ import java.util.LinkedList;
  * 
  */
 public class TourInfernale 
-{
+{	
 	// declaration des variables
 	private int nbTours;
 	private int nbJoueurs;
 	private Plateau p;
 	private LinkedList<Joueur> listeJ = new LinkedList<Joueur>();
 	
-	TourInfernale(int nbJoueurs)
+	// pour les saisies
+	private Scanner scanner = new Scanner(System.in);
+	
+	public TourInfernale()
 	{
+		nbTours = 0;
+		nbJoueurs = 2;
+		p = new Plateau(9,9);
+		listeJ.add(new Humain(2,3,"jojo"));
+		listeJ.add(new Humain(5,6,"jerem"));
+	}
+	
+	TourInfernale(int nbJoueurs)
+	throws NombreDeJoueursException
+	{
+		if(nbJoueurs<0)
+			throw new NombreDeJoueursException();
+		else
+			this.nbJoueurs = nbJoueurs;
+	
 		this.nbTours=0;
 		this.nbJoueurs=nbJoueurs;
 		
 		// creation du Plateau de jeu
-		this. p = new Plateau(creationPlateau());
-		Scanner scanner = new Scanner(System.in);
+		this.p = new Plateau(creationPlateau());
 		// declaration et initialisation des joueurs
+		saisieJoueurs();
+	}
+	
+	public void finalise()
+	{
+		scanner.close();
+		System.out.println("Objet Tour Infernale nettoy√©.");
+	}
+	
+	public void saisieJoueurs()
+	{
 		for (int i=0; i<this.nbJoueurs; i++)
 		{
 			int jAbs,jOrd;
@@ -34,26 +63,12 @@ public class TourInfernale
 			jNom = scanner.next();
 			System.out.println("Quel est la position du joueur "+(i+1)+" ?");
 			
-			boolean saisie = true;
-
-			try
-			{
-				jAbs = scanner.nextInt();
-				jOrd = scanner.nextInt();			
-				scanner.reset();
-				this.listeJ.add(new Humain(jAbs,jOrd, jNom));
-				saisie = false;
-			}
-			catch(InputMismatchException e)
-			{
-				System.out.println("Erreur de saisie. Ce n'est pas un entier. On choisit pour vous.");
-				scanner.reset();
-				this.listeJ.add(new Humain(i,i, jNom));
-				saisie = false;
-			}
+			jAbs = lireEntier();
+			jOrd = lireEntier();			
+			this.listeJ.add(new Humain(jAbs,jOrd, jNom));
+			
 			p.setEtat(listeJ.get(i).getJoueur());	
 		}
-		System.out.println(p.toString());
 	}
 
 	public static Joueur creerJoueur(Plateau p, int abs, int ord)
@@ -80,38 +95,21 @@ public class TourInfernale
 		return this.nbJoueurs;
 	}
 	
-	public static int renvoiEntier()
+	public int[] creationPlateau()
 	{
-		Scanner sc = new Scanner(System.in);
-		
-		try
-		{
-			System.out.println("Veuillez saisir un entier svp.");
-			int entier = sc.nextInt();
-			
-			return entier;
-		}
-		catch(InputMismatchException e)
-		{
-			System.out.println("Ce n'est pas un entier.");
-			
-			return -1;
-		}
+		return creationPlateau(5,20);
 	}
 	
-	public static int[] creationPlateau()
+	public int[] creationPlateau(int min, int max)
 	{
-		// parametres de jeu
-		Scanner scanner = new Scanner(System.in);
-		
+		// param√®tres de jeu		
 		int valInt = 0;
 		int[] pVal = new int[2];
-		int min = 5;
-		int max = 20;
+		
 		do
 		{
 			System.out.println("Veuillez saisir la largeur du plateau svp :("+min+","+max+")");
-			valInt = scanner.nextInt();
+			valInt = lireEntier("");
 			System.out.println("Vous avez saisi : " + valInt);
 			pVal[0] = valInt;
 		}
@@ -126,33 +124,108 @@ public class TourInfernale
 		}
 		while(valInt<=min || valInt>=max);
 		
-		// reflechir si nÈcessitÈ de fermer le lecteur
+		// reflechir si n√©cessit√© de fermer le lecteur
 		// scanner.close();
 
 		return pVal;
 	}
 	
-	public void verification(){
+	public boolean testVictoire (int nbJoueurElimine)
+	{
+		if(nbJoueurElimine == this.nbJoueurs - 1)
+		{
+			System.out.println("Fin de la partie");
+			return true;
+		}
+		else return false;
+	}
+	
+	// v√©rifie si une chaine de caract√®re est un entier
+	// m√©thode test√©e et fonctionnelle
+	public boolean verifEntier(String entier)
+	{
+		try
+		{
+			Integer.parseInt(entier);
+			return true;
+		}
+		catch(Exception e)
+		{
+			System.out.println("Variable non enti√®re.");
+			return false;
+		}
+	}
+	
+	public int lireEntier()
+	{
+		return lireEntier("Veuillez saisir un entier svp");
+	}
+	
+	public int lireEntier(String texteUtilisateur)
+	{
+		System.out.println(texteUtilisateur);
 		
+		String entier = scanner.next();
+		
+		if (texteUtilisateur.isEmpty() || !verifEntier(entier))
+		{
+	        System.out.println("Veuillez renseigner votre choix svp.");
+	        return lireEntier(texteUtilisateur);
+	    } else {
+	        return Integer.parseInt(entier);
+	    }
 	}
 	
 	public static void main(String[] args)
-	{
+	{	
+		Scanner scan = new Scanner(System.in);
+		String s;
+		boolean cont = true;
+		do{
+			s=scan.next();
+			if(s.matches("^[a-zA-Z]*$"))
+				cont=false;
+		}
+		while(cont);
+		System.out.println("Super !");
+		scan.reset();
+		scan.close();
+
+		TourInfernale test = new TourInfernale();
+		System.out.println(test.lireEntier("Saisissez un entier svp."));
+		
 		//Initialisation de la partie
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Combien y a-t-il de joueurs ?");
 		int nbjoueur = scanner.nextInt();
+		scanner.close();
 
 		// test de jeu
-		TourInfernale ti = new TourInfernale(nbjoueur);
+		TourInfernale ti = null;
+		try
+		{
+			ti = new TourInfernale(nbjoueur);
+		}
+		catch(NombreDeJoueursException e){}
+		finally
+		{
+			if(nbjoueur < 0)
+			{
+				System.out.println("S√©lection automatique : 2 joueurs.");
+				ti = new TourInfernale();
+			}
+			System.out.println(ti.p.toString());
+		}
 		
-		//DÈbut partie
-		int nbTour = 0;
+		
+		
+		//D√©but partie
 		boolean jeu = false;
 		int[] jPerdant = new int[ti.getTiNbJoueurs()-1];
 		for(int i=0; i<jPerdant.length; i++)
 			jPerdant[i] = -1;
-		while(jeu == false){
+		while(jeu == false)
+		{
 			int numJoueur = ti.getTiNbTours()%ti.getTiNbJoueurs();
 			int tourSuivant = 0;
 			for(int i = 0; i<ti.getTiNbJoueurs()-1;i++)
@@ -172,27 +245,24 @@ public class TourInfernale
 			// selection du joueur suivant le tour
 			ti.listeJ.get(numJoueur);
 			
-			//VÈrifions si le joueur est placÈ sur une case bonus
+			//V√©rifions si le joueur est plac√© sur une case bonus
 			boolean bonus = false;
 			if(ti.p.getEtat(ti.listeJ.get(numJoueur).jHor,ti.listeJ.get(numJoueur).jVer) == 3){
 				bonus = true;
-				System.out.println("Joueur " + ti.listeJ.get(numJoueur).getNom() + ", vous Ítes actuellement sur une case bonus. Vous avez donc la possibilitÈ de jouer une seconde fois.");
+				System.out.println("Joueur " + ti.listeJ.get(numJoueur).getNom() + ", vous √™tes actuellement sur une case bonus. Vous avez donc la possibilitÔøΩ de jouer une seconde fois.");
 			}
 			
-			// choix d'une case ‡ griser
-			System.out.println("Joueur " + ti.listeJ.get(numJoueur).getNom() + ", choisissez une case ‡ griser.");
+			// choix d'une case √† griser
+			System.out.println("Joueur " + ti.listeJ.get(numJoueur).getNom() + ", choisissez une case √† griser.");
 			int cgh = scanner.nextInt();
 			int cgv = scanner.nextInt();
 			ti.p.griserCase(cgh,cgv);
 			
 			// deplacement du joueur
-			System.out.println("Joueur " + ti.listeJ.get(numJoueur).jName + ", veuillez vous dÈplacer.");
+			System.out.println("Joueur " + ti.listeJ.get(numJoueur).jName + ", veuillez vous d√©placer.");
 			int M = 0;
-			do
-			{
-				M = renvoiEntier();
-			}
-			while(M==-1);
+			// implementer un fonction lireDeplacement dans Joueur
+			M = ti.lireEntier();
 			
 			int[] nouvellePosition = ti.p.deplacer(M, ti.listeJ.get(numJoueur).jHor, ti.listeJ.get(numJoueur).jVer); 
 			ti.listeJ.get(numJoueur).setJoueur(nouvellePosition[0],nouvellePosition[1]);
@@ -206,13 +276,12 @@ public class TourInfernale
 				ti.setTiNbTours(ti.getTiNbTours()+1);
 			}
 			
-			//On vÈrifie si la partie est fini
+			//On v√©rifie si la partie est fini
 			int joueurElimine = 0;
 			for(int i=0; i<nbjoueur; i++){
-				if(     ti.listeJ.get(i).jHor != 0 && ti.listeJ.get(i).jVer != 0 && ti.listeJ.get(i).jHor != ti.p.abs && ti.listeJ.get(i).jVer != ti.p.ord   
+				if(ti.listeJ.get(i).jHor != 0 && ti.listeJ.get(i).jHor != ti.p.abs  && ti.listeJ.get(i).jVer == ti.p.ord   
 						&& ti.p.getEtat(ti.listeJ.get(i).jHor+1, ti.listeJ.get(i).jVer)!=0
 						&& ti.p.getEtat(ti.listeJ.get(i).jHor-1, ti.listeJ.get(i).jVer)!=0
-						&& ti.p.getEtat(ti.listeJ.get(i).jHor, ti.listeJ.get(i).jVer+1)!=0
 						&& ti.p.getEtat(ti.listeJ.get(i).jHor, ti.listeJ.get(i).jVer-1)!=0){
 					joueurElimine++;
 					System.out.println(ti.listeJ.get(i).jName + " a perdu !");
@@ -262,89 +331,18 @@ public class TourInfernale
 					joueurElimine++;
 					System.out.println(ti.listeJ.get(i).jName + " a perdu !");
 				}
-				else if(ti.listeJ.get(i).jHor != 0 && ti.listeJ.get(i).jHor != ti.p.abs  && ti.listeJ.get(i).jVer == ti.p.ord   
+				else if(     ti.listeJ.get(i).jHor != 0 && ti.listeJ.get(i).jVer != 0 && ti.listeJ.get(i).jHor != ti.p.abs && ti.listeJ.get(i).jVer != ti.p.ord   
 						&& ti.p.getEtat(ti.listeJ.get(i).jHor+1, ti.listeJ.get(i).jVer)!=0
 						&& ti.p.getEtat(ti.listeJ.get(i).jHor-1, ti.listeJ.get(i).jVer)!=0
+						&& ti.p.getEtat(ti.listeJ.get(i).jHor, ti.listeJ.get(i).jVer+1)!=0
 						&& ti.p.getEtat(ti.listeJ.get(i).jHor, ti.listeJ.get(i).jVer-1)!=0){
 					joueurElimine++;
 					System.out.println(ti.listeJ.get(i).jName + " a perdu !");
-				}
-				
-			}
+				}				
+			}			
 			
-//			// try-catch : gestion de l'erreur
-//			try
-//			{
-//				deplacerJoueur();
-//			}
-//			catch (IndexOutOfBoundsException | InputMismatchException e2)
-//			{
-//				System.out.println("Vous ne pouvez effectuer ce dÈplacement !");
-//			}
-//			finally
-//			{
-//				scanner.close();
-//			}
-			
-//			// do-while
-//			do
-//			{
-//				System.out.println("Je m'execute toujours une fois.");
-//			}
-//			while(false);
-			
-			
-			
-			//On vÈrifie si nbjoueur-1 ont perdu
-			if(joueurElimine == nbjoueur-1){
-				jeu = true;
-			}
-			
+			//On v√©rifie si nbjoueur-1 ont perdu
+			jeu = ti.testVictoire(joueurElimine);
 		}
-		// fin du jeu
-		System.out.println("-----GAME OVER-----");
-	}
-	
-	
-//		// creation du plateau de jeu
-//		Plateau plateau = new Plateau(creationPlateau());
-//		
-//		Joueur j1;
-//		j1 = creerJoueur(plateau, 3, 2);
-//		plateau.setEtat(j1.getJoueur());
-//		Joueur j2 = new Humain(4,5);
-//		plateau.setEtat(j2.getJoueur());
-//		if(plateau.griserCase(6, 6)==0)
-//			System.out.println("Case grisÈe !");
-//		else
-//			System.out.println("Case NON grisÈe.");		
-//		System.out.print(plateau.toString());
-		
-		
-		
-		
-//		Scanner scanner = new Scanner(System.in);
-//		int deplacement;
-//		deplacement = scanner.nextInt();
-//		j1.deplacer(6);
-////		scanner.close();
-//		plateau.setEtat(j1.getJoueur());
-//		System.out.print(plateau.toString());
-
-//		// test de jeu
-//		TourInfernale jeu = new TourInfernale(2);//, 5, 5);
-//	}
+	}	
 }
-
-//// bout de code try catch-scanner
-//try
-//{
-//	Scanner sc = new Scanner(System.in);
-//	int nb;
-//	nb = sc.nextInt();
-//	sc.close();
-//}
-//catch (ArrayIndexOutOfBoundsException e)
-//{
-//	System.out.println("Reste dans le tableau connard !");
-//}

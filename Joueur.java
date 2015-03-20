@@ -9,7 +9,7 @@ public abstract class Joueur
 {
 	protected int jHor, jVer, jEtat;
 	protected String jName;
-	protected char jLettre;
+//	protected char jLettre;
 	
 	public Joueur(int abs, int ord)
 	{
@@ -23,7 +23,7 @@ public abstract class Joueur
 	{
 		this(abs, ord);
 		this.jName = nom;
-		this.jLettre = jName.charAt(0);
+//		this.jLettre = jName.charAt(0);
 	}
 	
 	public int[] getJoueur()

@@ -7,23 +7,23 @@
  */
 public class Plateau
 {
-	private char[][] terrain;
+	private int[][] terrain;
 	public int abs, ord;
 	
 	/* Constructeur a deux arguments de la classe
-	 * Il prend en paramètres le nombre de cases horizontales et verticales
+	 * Il prend en paramÃ¨tres le nombre de cases horizontales et verticales
 	 */
 	public Plateau (int hor, int ver)
 	{
 		this.abs = hor;
 		this.ord = ver;
-		terrain = new char[this.abs][this.ord];
+		terrain = new int[this.abs][this.ord];
 		
 		for(int i = 0; i < this.abs; i++)
 		{
 			for (int j = 0; j < this.ord; j++)
 			{
-				terrain[i][j] = '0';
+				terrain[i][j] = 0;
 			}
 		}
 		
@@ -36,7 +36,7 @@ public class Plateau
 			int aleaVer = (int)(Math.random()*this.ord);
 			
 			// pas de gestion de conflits puisque le terrain est vide
-			// un bonus peut être remplacé par un bonus
+			// un bonus peut ï¿½tre remplacï¿½ par un bonus
 			terrain[aleaHor][aleaVer] = 3;
 		}
 	}
@@ -53,17 +53,17 @@ public class Plateau
 		return terrain[hor][ver];
 	}
 	
-	/* methode permettant de fixer un etat à une case du plateau
+	/* methode permettant de fixer un etat Ã  une case du plateau
 	 * 0 : case libre
-	 * 1 : case grisée
-	 * 2 : case joueur présent
+	 * 1 : case grisÃ©e
+	 * 2 : case joueur prÃ©sent
 	 * 3 : case bonus
 	 */
 	public boolean setEtat(int hor, int ver, int etat)
 	{
 		if(etat>=0 || etat<=3)
 		{
-			terrain[hor][ver] = (char)etat;
+			terrain[hor][ver] = etat;
 			
 			return true;
 		}
@@ -79,8 +79,8 @@ public class Plateau
 	// methode indiquant les cases du plateau
 		public String toString()
 		{
-			System.out.println("Le plateau est occupé :");
-			System.out.print("    -par une case grisée en : "); 
+			System.out.println("Le plateau est occupÃ© :");
+			System.out.print("    -par une case grisÃ©e en : "); 
 			for(int i = 0; i < this.abs; i++)
 			{
 				for (int j = 0; j < this.ord; j++)
@@ -117,14 +117,16 @@ public class Plateau
 			}
 			System.out.println("");
 			
+			// affichage du tableau
 			System.out.print("  ");
 			for(int i=0; i<this.abs; i++)
 				System.out.print(i);
 			System.out.println();
-			for(int i = 0; i < this.abs; i++)
+			//int j = this.ord-1;
+			for(int j = this.ord-1; j >= 0 ; j=j-1)
 			{
-				System.out.print(i+" ");
-				for (int j = 0; j < this.ord; j++)
+				System.out.print(j+" ");
+				for(int i = 0; i < this.abs; i++)
 				{
 					System.out.print(terrain[i][j]);
 				}
@@ -136,11 +138,11 @@ public class Plateau
 		
 		public int[] deplacer(int M, int jHor, int jVer)
 		{
-			/* methode permettant de déplacer un joueur d'une case du plateau
+			/* methode permettant de dÃ©placer un joueur d'une case du plateau
 			 * 8 : avance d'une case
 			 * 2 : recule d'une case
-			 * 4 : se décale d'une case à gauche
-			 * 6 : se décale d'une case à droite
+			 * 4 : se dÃ©cale d'une case Ã  gauche
+			 * 6 : se dÃ©cale d'une case Ã  droite
 			 * trackhash
 			 */
 			
@@ -165,7 +167,7 @@ public class Plateau
 				terrain[jHor][jVer]= 2;
 				nouvellePosition[0] = jHor;
 				nouvellePosition[1] = jVer;
-				System.out.println("J'étais en postion : (" + ancienneAbs + "," + ancienneOrd + ") et je suis désormais en : (" + jHor + "," + jVer + ").");
+				System.out.println("J'Ã©tais en postion : (" + ancienneAbs + "," + ancienneOrd + ") et je suis dÃ©sormais en : (" + jHor + "," + jVer + ").");
 			}
 			else{
 				System.out.println("Mouvement impossible : sortie de plateau");

@@ -1,5 +1,4 @@
-package TourInfernale;
-import java.awt.event.KeyEvent;
+//import java.awt.event.KeyEvent;
 
 /**
  * 
@@ -53,7 +52,15 @@ public class Plateau
 	
 	public int getEtat(int hor, int ver)
 	{
-		return terrain[hor][ver];
+		try
+		{
+			return terrain[hor][ver];
+		}
+		catch(Exception e)
+		{
+			return -1;
+		}
+		
 	}
 	
 	/* methode permettant de fixer un etat à une case du plateau
@@ -77,6 +84,16 @@ public class Plateau
 	public boolean setEtat(int[] joueur)
 	{
 		return this.setEtat(joueur[0], joueur[1], joueur[2]);
+	}
+	
+	public int getLargeur()
+	{
+		return this.abs;
+	}
+	
+	public int getHauteur()
+	{
+		return this.ord;
 	}
 	
 	// methode indiquant les cases du plateau

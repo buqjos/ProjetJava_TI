@@ -1,5 +1,3 @@
-package TourInfernale;
-
 public class NombreDeJoueursException extends Exception
 {
 	public NombreDeJoueursException()

@@ -1,4 +1,3 @@
-package TourInfernale;
 //import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.LinkedList;
@@ -25,28 +24,28 @@ public class TourInfernale
 	// main
 	public static void main(String[] args)
 	{
-//		// Initialisation de la partie
-//		Scanner scanner = new Scanner(System.in);
-//		System.out.println("Combien y a-t-il de joueurs ?");
-//		int nbjoueur = scanner.nextInt();
-//		
-// 		// creation de l'objet de type TourInfernale
-// 		TourInfernale ti = null;
-// 		try
-// 		{
-// 			ti = new TourInfernale(nbjoueur);
-// 		}
-// 		catch(NombreDeJoueursException e){}
-// 		finally
-// 		{
-// 			if(nbjoueur < 0)
-// 			{
-// 				System.out.println("Sélection automatique : 2 joueurs, plateau 9x9");
-// 				ti = new TourInfernale();
-// 			}
-// 		}
+		// Initialisation de la partie
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Combien y a-t-il de joueurs ?");
+		int nbjoueur = scanner.nextInt();
 		
-		TourInfernale ti = new TourInfernale();
+ 		// creation de l'objet de type TourInfernale
+ 		TourInfernale ti = null;
+ 		try
+ 		{
+ 			ti = new TourInfernale(nbjoueur);
+ 		}
+ 		catch(NombreDeJoueursException e){}
+ 		finally
+ 		{
+ 			if(nbjoueur < 0)
+ 			{
+ 				System.out.println("Sélection automatique : 2 joueurs, plateau 9x9");
+ 				ti = new TourInfernale();
+ 			}
+ 		}
+		
+//		TourInfernale ti = new TourInfernale();
  		
  		// tableau des joueurs perdants
 		// chaque joueur a à son numéro soit 0 si il joue soit 1 si il a perdu
@@ -73,7 +72,10 @@ public class TourInfernale
  			
  			// deplacement du joueur
  			System.out.println("Joueur " + ti.getNomJoueur(numJoueur) + ", veuillez vous déplacer.");
- 			ti.deplacer(numJoueur);
+ 			
+ 			int[] valDeplacement ={2,4,6,8};
+ 			int deplacement = ti.lireEntier(valDeplacement);
+ 			ti.deplacer(numJoueur, deplacement);
  			System.out.print(ti);
  			
  			boolean bonus = false;
@@ -138,8 +140,8 @@ public class TourInfernale
 			jNom = scanner.next();
 			System.out.println("Quel est la position du joueur "+(i+1)+" ?");
 			
-			jAbs = lireEntier();
-			jOrd = lireEntier();			
+			jAbs = lireEntier("Saisissez l'abscisse.",0,this.p.getLargeur());
+			jOrd = lireEntier("Saisissez l'ordonnée.",0,this.p.getHauteur());			
 			this.listeJ.add(new Humain(jAbs,jOrd, jNom));
 			
 			p.setEtat(listeJ.get(i).getJoueur());	
@@ -264,6 +266,34 @@ public class TourInfernale
 	    }
 	}
 	
+	public int lireEntier(String texteUtilisateur, int min, int max)
+	{
+		int entier = lireEntier(texteUtilisateur);
+		if(entier<min || entier>max)
+		{
+			System.out.println("L'entier doit être entre "+min+" et "+max+".");
+			return lireEntier(texteUtilisateur, min, max);
+		}
+		else return entier;		
+	}
+	
+	public int lireEntier(int[] valEntier)
+	{
+		String message = "";
+		message += "Veuillez saisir un entier parmi : ";
+		for(int i:valEntier)
+			message += valEntier[i] + ",";
+		message += "\n";
+		System.out.print(message);
+		
+		int entier = lireEntier();
+		
+		for (int i:valEntier)
+			if(entier!=valEntier[i])
+				return lireEntier(valEntier);
+		return entier;
+	}
+	
 	// methode de verification de chaine de caractères
 	// on s'assure que la chaine fournie suit une expression regex donnée en argument
 	public String lireTexte(String regex)
@@ -380,14 +410,17 @@ public class TourInfernale
 		
 	}
 
-	public boolean deplacer(int numJoueur)
+	public boolean deplacer(int numJoueur, int deplacement)
 	{
-		int deplacement = this.lireEntier();
+		int[] nouvellePosition = this.p.deplacer(deplacement, this.getJoueur(numJoueur)[0], this.getJoueur(numJoueur)[1]);
 		
-		int[] nouvellePosition = this.p.deplacer(deplacement, this.getJoueur(numJoueur)[0], this.getJoueur(numJoueur)[1]); 
-		this.setJoueur(numJoueur,nouvellePosition[0],nouvellePosition[1]);
-		return true;
+		int etat = this.p.getEtat(nouvellePosition[0], nouvellePosition[1]);
+		if(etat==-1 || etat==1 || etat==2)
+			return false;
+		else
+		{
+			this.setJoueur(numJoueur,nouvellePosition[0],nouvellePosition[1]);
+			return true;
+		}
 	}
-	
-	
 }
